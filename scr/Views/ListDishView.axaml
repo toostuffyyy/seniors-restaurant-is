@@ -1,0 +1,186 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="using:Seniors.ViewModels"
+			 x:DataType="vm:ListDishViewModel"
+             x:Class="Seniors.Views.ListDishView">
+	<UserControl.Styles>
+		<!--TabControl-->
+		<Style Selector="TabControl.ListDish > TabItem">
+			<Setter Property="CornerRadius" Value="10"/>
+			<Setter Property="BorderBrush" Value="Black"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Padding" Value="5	"/>
+			<Setter Property="Margin" Value="2, 0"/>
+		</Style>
+		<Style Selector="TabControl.ListDish > TabItem:selected:pointerover/template/ Border#PART_LayoutRoot">
+			<Setter Property="Background" Value="#00B5FF"/>
+		</Style>
+		<Style Selector="TabControl.ListDish > TabItem:selected">
+			<Setter Property="Background" Value="#00B5FF"/>
+		</Style>
+		<Style Selector="TabControl.ListDish > TabItem:selected /template/	Border#PART_SelectedPipe">
+			<Setter Property="IsVisible" Value="False"/>
+		</Style>
+		<!--DataGrid-->
+		<Style Selector="DataGridCell">
+			<Setter Property="BorderThickness" Value="0"/>
+		</Style>
+		<Style Selector="DataGrid.DGListDish /template/ DataGridRowsPresenter#PART_RowsPresenter > DataGridRow:selected  /template/ Rectangle#BackgroundRectangle">
+			<Setter Property="Fill" Value="Transparent"/>
+		</Style>
+		<Style Selector="DataGridCell:selected /template/ Grid#FocusVisual">
+			<Setter Property="IsVisible" Value="False"/>
+		</Style>
+		<!--ListBox-->
+		<Style Selector="ListBox.MenuListBox">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBox.MenuListBox">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBox.MenuListBox > ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBox.MenuListBox > ListBoxItem:pointerover  /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<!--TextBox-->
+		<Style Selector="TextBox.Search">
+			<Setter Property="Padding" Value="10,0,30,0"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Top"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="Background">
+				<Setter.Value>
+					<ImageBrush AlignmentX="Right" Source="/Assets/search.png"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="TextBox.Search:pointerover /template/Border#PART_BorderElement">
+			<Setter Property="BorderBrush" Value="#00B5FF"/>
+			<Setter Property="Background">
+				<Setter.Value>
+					<ImageBrush AlignmentX="Right" Source="/Assets/searchSelected.png"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="TextBox.Search:focus /template/Border#PART_BorderElement">
+			<Setter Property="BorderBrush" Value="#00B5FF"/>
+			<Setter Property="Background">
+				<Setter.Value>
+					<ImageBrush AlignmentX="Right" Source="/Assets/searchSelected.png"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</UserControl.Styles>
+	
+	<Grid>
+		<TextBox Classes="Search"
+		         Margin="75,15,15,0" Watermark="Поиск по названию и описанию блюда" Text="{Binding SearchString}"/>
+		<StackPanel Orientation="Vertical" Width="135" HorizontalAlignment="Left" Margin="25,150" Spacing="25">
+			<Expander Header="Тип" IsExpanded="True">
+				<ItemsControl Items="{Binding TypeDishes}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<CheckBox IsChecked="{Binding IsChecked}"
+							          Content="{Binding Value.Name}"/>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</Expander>
+			<ComboBox PlaceholderText="Сортировать по" SelectedIndex="{Binding SortSelectedIndex}">
+				<ComboBoxItem Content="По названию (по возр)"/>
+				<ComboBoxItem Content="По названию (по убыв)"/>
+				<ComboBoxItem Content="По цене (по возр)"/>
+				<ComboBoxItem Content="По цене (по убыв)"/>
+			</ComboBox>
+		</StackPanel>
+		<TabControl Classes="ListDish" Margin="175,60,0,0">
+			<TabItem>
+				<TabItem.Header>
+					<Panel Width="30" Height="30">
+						<Image IsVisible="{Binding	RelativeSource={RelativeSource	AncestorType=TabItem}, Path=!IsSelected}"
+							   Source="/Assets/dataGrid.png"/>
+						<Image IsVisible="{Binding	RelativeSource={RelativeSource	AncestorType=TabItem}, Path=IsSelected}"
+							   Source="/Assets/dataGridSelected.png"/>
+					</Panel>
+				</TabItem.Header>
+				<!--DataGrid-->
+				<DataGrid  Items="{Binding Dishs}" 
+				           Margin="10" 
+				           
+				           Classes="DGListDish" 
+				           HorizontalAlignment="Stretch" 
+				           HeadersVisibility="None">
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Фото">
+							<DataTemplate>
+								<StackPanel Spacing="0,0,0,2">
+									<Border Width="200" Height="150" CornerRadius="10" Margin="10,10">
+										<Border.Background>
+											<ImageBrush Source="{Binding Image, Converter={StaticResource	BitmapValueConverter}}" Stretch="UniformToFill"/>
+										</Border.Background>
+									</Border>
+									<TextBlock Text="{Binding Name}" 
+									           HorizontalAlignment="Center" 
+									           VerticalAlignment="Bottom"
+									           FontWeight="Light" />
+								</StackPanel>
+							</DataTemplate>
+						</DataGridTemplateColumn>
+						<DataGridTextColumn IsReadOnly="True" Header="Цена" FontWeight="Bold" Binding="{Binding Price, StringFormat={}{0} руб.}"/>
+						<DataGridTemplateColumn IsReadOnly="True" Header="Описание" Width="350">
+							<DataTemplate>
+								<TextBlock Text="{Binding Notes}" 
+								           TextWrapping="Wrap"
+								           Padding="5,0,0,0"
+								           HorizontalAlignment="Left"/>
+							</DataTemplate>
+						</DataGridTemplateColumn>
+						<DataGridTextColumn IsReadOnly="True" Header="Тип" Binding="{Binding TypeDishes, 
+											Mode=OneWay, 
+											Converter={StaticResource ListTypeDishToStringConverter}}"/>
+					</DataGrid.Columns>
+				</DataGrid>
+			</TabItem>
+			<TabItem>
+				<TabItem.Header>
+					<Panel Width="30" Height="30">
+						<Image IsVisible="{Binding	RelativeSource={RelativeSource	AncestorType=TabItem}, Path=!IsSelected}"
+							   Source="/Assets/listBox.png"/>
+						<Image IsVisible="{Binding	RelativeSource={RelativeSource	AncestorType=TabItem}, Path=IsSelected}"
+							   Source="/Assets/listBoxSelected.png"/>
+					</Panel>
+				</TabItem.Header>
+				<!--ListBox-->
+				<ListBox Items="{Binding Dishs}" Classes="MenuListBox">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<DockPanel Width="200" Height="300">
+								<Border Width="200" Height="250" CornerRadius="10" DockPanel.Dock="Top">
+									<Border.Background>
+										<ImageBrush Source="{Binding Image, Converter={StaticResource	BitmapValueConverter}}" Stretch="UniformToFill"/>
+									</Border.Background>
+								</Border>
+								<TextBlock Text="{Binding Name}"
+								           DockPanel.Dock="Top"
+								           Padding="5,5"/>
+								<TextBlock FontWeight="Bold"
+								           DockPanel.Dock="Top"
+								           Text="{Binding Price, StringFormat={}{0} руб.}"/>
+							</DockPanel>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+					<ListBox.ItemsPanel>
+						<ItemsPanelTemplate>
+							<WrapPanel Orientation="Horizontal"/>
+						</ItemsPanelTemplate>
+					</ListBox.ItemsPanel>
+				</ListBox>
+			</TabItem>
+		</TabControl>
+	</Grid>
+</UserControl>

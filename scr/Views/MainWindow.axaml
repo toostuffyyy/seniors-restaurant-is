@@ -1,0 +1,152 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Seniors.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="650"
+		MinHeight="450" MinWidth="800"
+        x:Class="Seniors.Views.MainWindow"
+		x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/Logo.png"
+        Title="Ресторан Seniors">
+	
+	<Window.Styles>
+		<Style Selector="TextBlock">
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="FontSize" Value="16"/>
+		</Style>
+		<Style Selector="Rectangle.Line">
+			<Setter Property="Margin" Value="10,10"/>
+			<Setter Property="Stroke" Value="Gray"/>
+			<Setter Property="StrokeThickness" Value="0.7"/>
+			<Setter Property="StrokeDashArray" Value="4, 4"/>
+			<Setter Property="Height" Value="0.5"/>
+		</Style>
+		<Style Selector="Button.ExitButton">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Margin" Value="0, 15"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="FontWeight" Value="Light"/>
+		</Style>
+		<Style Selector="Button.ExitButton:pointerover /template/ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="TextBlock.Foreground" Value="#9fd8f0"/>
+		</Style>
+		<Style Selector="ListBox.MenuListItem">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+		</Style>
+		<Style Selector="ListBox.MenuListItem > ListBoxItem:pointerover /template/ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBox.MenuListItem > ListBoxItem:selected /template/ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="TextBlock.Foreground" Value="#9fd8f0"/>
+		</Style>
+	</Window.Styles>
+	
+	<Grid Background="#ededed">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="150"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<!--Column 0-->
+		<Border CornerRadius="0,10,10,0" 
+				Background="White"
+				BoxShadow="0 4 4 4 #40000000">
+			<DockPanel>
+				<StackPanel Orientation="Horizontal" 
+							DockPanel.Dock="Top" 
+							Margin="10, 30"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Top">
+					<Image Source="/Assets/Logo.png" Height="35"/>
+					<TextBlock Text="Seniors" FontSize="25"/>
+				</StackPanel>
+				<TextBlock Text="Главное меню" DockPanel.Dock="Top"/>
+				<Rectangle Classes="Line" DockPanel.Dock="Top"/>
+				<ListBox Items="{Binding	MainMenuViewModels}"
+						 SelectedItem="{Binding	SelectedViewModel}"
+						 Classes="MenuListItem"
+						 DockPanel.Dock="Top">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal" Spacing="5">
+								<Panel>
+									<Image  IsVisible="{Binding	RelativeSource={RelativeSource	AncestorType=ListBoxItem}, Path=!IsSelected}" 
+									        Source="{Binding IconViewModel, Converter={StaticResource BitmapAssetValueConverter}}" 
+									        Height="25"/>
+									<Image  IsVisible="{Binding	RelativeSource={RelativeSource	AncestorType=ListBoxItem}, Path=IsSelected}" 
+									        Source="{Binding IconViewModelSelected, Converter={StaticResource BitmapAssetValueConverter}}" 
+									        Height="25"/>
+								</Panel>
+								<TextBlock Text="{Binding	Title}" 
+										   FontSize="16" />
+							</StackPanel>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+				<Button Name="ExitButton" 
+						Classes="ExitButton" 
+						HorizontalAlignment="Center"
+						HorizontalContentAlignment="Left"
+						DockPanel.Dock="Bottom">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Panel Width="20" Height="20">
+							<Image IsVisible="{Binding	RelativeSource={RelativeSource	AncestorType=Button}, Path=!IsPointerOver}" Source="/Assets/ExitButton.png"/>
+							<Image IsVisible="{Binding	RelativeSource={RelativeSource	AncestorType=Button}, Path=IsPointerOver}" Source="/Assets/ExitButtonSelected.png"/>
+						</Panel>
+						<TextBlock Text="Выйти"/>
+					</StackPanel>
+				</Button>
+				<Rectangle Classes="Line" DockPanel.Dock="Bottom"/>
+				<StackPanel Orientation="Horizontal" 
+							DockPanel.Dock="Bottom" 
+							Margin="10"
+							Spacing="5"
+							VerticalAlignment="Bottom" 
+							HorizontalAlignment="Center">
+					<Border Width="40" Height="40" CornerRadius="300">
+						<Border.Background>
+							<ImageBrush Source="{Binding EmployeeRests.Image, Converter={StaticResource	BitmapValueConverter}}" Stretch="UniformToFill"/>
+						</Border.Background>
+					</Border>
+					<StackPanel VerticalAlignment="Center">
+						<TextBlock FontSize="13" FontWeight="Bold">
+							<TextBlock.Text>
+								<MultiBinding StringFormat="{}{0} {1}. {2}.">
+									<Binding Path="EmployeeRests.LastName"/>
+									<Binding Path="EmployeeRests.Name[0]"/>
+									<Binding Path="EmployeeRests.Patronymic[0]"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+						<TextBlock Text="{Binding	EmployeeRests.Post.Name}" FontSize="12"/>
+					</StackPanel>
+				</StackPanel>
+			</DockPanel>
+		</Border>
+		<!--Column 1-->
+		<Grid Grid.Column="1"
+			  Margin="10">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			
+			<TextBlock Text="{Binding SelectedViewModel.Title}"
+					   FontSize="20"
+					   HorizontalAlignment="Left"
+					   FontWeight="Bold"
+					   Margin="10, 10"/>
+			<Border Grid.Row="1"
+					CornerRadius="10"
+					Background="White"
+					BoxShadow="0 4 4 4 #40000000"
+					Margin="10">
+				<ContentControl Content="{Binding	SelectedViewModel}"/>
+			</Border>
+		</Grid>
+	</Grid>
+</Window>

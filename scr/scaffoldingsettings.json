@@ -1,0 +1,23 @@
+{
+  "DataSource": "Server=sqlStud;DataBase=20ip117;User id=20ip117; Password=1720ip1; TrustServerCertificate=true",
+  "Provider": "Microsoft.EntityFrameworkCore.SqlServer ",
+  "ContextName": "DataBaseContext",
+  "ContextDirectory": "Context",
+  "OutputDirectory": "Models",
+  "ContextNamespace": null,
+  "Namespace": null,
+  "Schemas": null,
+  "Tables": "Client, Dish, EmployeeRest, Pay, Post, Products, Schedule, Status, Supplier, Table, UserOrder",
+  "ProjectDirectory": ".",
+  "StartupProjectDirectory": ".",
+  "TargetFramework": null,
+  "Configuration": null,
+  "TargetRuntime": null,
+  "DataAnnotations": false,
+  "UseDatabaseNames": false,
+  "NoOnConfiguring": false,
+  "NoPluralize": true,
+  "Force": true,
+  "NoBuild": true,
+  "Verbose": false
+}
